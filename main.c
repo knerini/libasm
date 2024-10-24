@@ -12,7 +12,7 @@ int 	main(int ac, char *av)
 		printf("%s\n", "No arguments are required!");
 
 	printf("%s\nSECTION FT_STRLEN\n\n", "---------------------------------");
-	printf("%s %s\nlength string 1 = %ld\n", "string 1 =", str1, ft_strlen(str1));
+	printf("%s %s\nlength string 1 = %ld\n", "string 1 = ", str1, ft_strlen(str1));
 	printf("%s %s\nlength string 2 = %ld\n", "string 2 = ", str2, ft_strlen(str2));
 	printf("%s %s\nlength string 3 = %ld\n", "string 3 = ", str3, ft_strlen(str3));
 
