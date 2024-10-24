@@ -4,3 +4,4 @@ objs/*
 lib/*
 asm_prog
 asm_prog_dbg
+*.o
