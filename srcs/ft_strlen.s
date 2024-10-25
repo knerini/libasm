@@ -23,7 +23,7 @@ ft_strlen:
 _next_char:
 	cmp 	[rdi + rax],	byte 0 	; Compare the null terminated '/0'
 	jz 		_end_of_string			; Jump to the end section if it's the '/0'
-	inc 	rax						; It's a char to count
+	inc 	rax						; It's a char to count, and increment to go to next char
 	jmp 	_next_char				; Process again
 
 _end_of_string:

@@ -30,6 +30,9 @@ section .text
 
 global main
 main:
+
+	; ----ft_strlen tests----
+
 	lea		rdi,	[rel str1]	; address of str1
 	call 	ft_strlen
 	mov		rbx,	rdi			; save address in another register to get back rdi
@@ -38,9 +41,8 @@ main:
 	; write system call
 	mov 	rax,	SYS_write 	; call code for system write
 	mov 	rdi,	STDOUT		; output location to put in rdi for system write
-	mov 	rsi,	rbx			; system write need the address of string in rsi register
-	mov		rdx,	rcx			; system write need the length to count in rdx register
-	
+	mov 	rsi,	rbx			; system write needs the address of string in rsi register
+	mov		rdx,	rcx			; system write needs the length to count in rdx register
 	syscall
 
 	lea		rdi,	[rel str2]	; address of str2
@@ -51,9 +53,8 @@ main:
 	; write system call
 	mov 	rax,	SYS_write 	; call code for system write
 	mov 	rdi,	STDOUT		; output location to put in rdi for system write
-	mov 	rsi,	rbx			; system write need the address of string in rsi register
-	mov		rdx,	rcx			; system write need the length to count in rdx register
-	
+	mov 	rsi,	rbx			; system write needs the address of string in rsi register
+	mov		rdx,	rcx			; system write needs the length to count in rdx register
 	syscall
 
 	lea		rdi,	[rel str3]	; address of str3
@@ -64,12 +65,11 @@ main:
 	; write system call
 	mov 	rax,	SYS_write 	; call code for system write
 	mov 	rdi,	STDOUT		; output location to put in rdi for system write
-	mov 	rsi,	rbx			; system write need the address of string in rsi register
-	mov		rdx,	rcx			; system write need the length to count in rdx register
-
+	mov 	rsi,	rbx			; system write needs the address of string in rsi register
+	mov		rdx,	rcx			; system write need sthe length to count in rdx register
 	syscall
 
-	; program done
+	; ----program done----
 	mov 	rax,	SYS_exit
 	mov 	rdi,	EXIT_SUCCESS
 	syscall
