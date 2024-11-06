@@ -4,6 +4,7 @@
 
 extern size_t ft_strlen(const char *str);
 extern char *ft_strcpy(char *dest, const char *src);
+extern int ft_strcmp(const char *s1, const char *s2);
 
 int 	main(int ac, char **av)
 {
@@ -12,6 +13,9 @@ int 	main(int ac, char **av)
 	char *str3 = "";
 	char *destc1 = NULL, *destc2 = NULL, *destc3 = NULL;
 	char *destasm1 = NULL, *destasm2 = NULL, *destasm3 = NULL;
+	char *s1 = "Hello world";
+	char *s2 = "Hella world";
+
 
 	if (ac > 1)
 		printf("No arguments are required!\n");
@@ -31,7 +35,6 @@ int 	main(int ac, char **av)
 		free(destasm1);
 		destc1 = destasm1 = NULL;
 	}
-
 	destasm2 = malloc(sizeof(char) * (ft_strlen(str2) + 1));
 	destc2 = malloc(sizeof(char) * (ft_strlen(str2) + 1));
 	if (destc2 && destasm2)
@@ -41,7 +44,6 @@ int 	main(int ac, char **av)
 		free(destasm2);
 		destc2 = destasm2 = NULL;
 	}
-
 	destasm3 = malloc(sizeof(char) * (ft_strlen(str3) + 1));
 	destc3 = malloc(sizeof(char) * (ft_strlen(str3) + 1));
 	if (destc3 && destasm3)
@@ -51,6 +53,17 @@ int 	main(int ac, char **av)
 		free(destasm3);
 		destc3 = destasm3 = NULL;
 	}
+
+	printf("\n--------------------------------\nSECTION FT_STRCMP\n\n");
+	printf("s1 = %s -- s2 = %s\n", s1, s2);
+	printf("Comp result (ft_strcmp in asm) = %d -- Comp result (strcmp in c) = %d\n", ft_strcmp(s1, s2), strcmp(s1, s2));
+	printf("s1 = %s -- s2 = %s\n", s2, s1);
+	printf("Comp result (ft_strcmp in asm) = %d -- Comp result (strcmp in c) = %d\n", ft_strcmp(s2, s1), strcmp(s2, s1));
+	printf("s1 = %s -- s2 = %s\n", s1, str1);
+	printf("Comp result (ft_strcmp in asm) = %d -- Comp result (strcmp in c) = %d\n", ft_strcmp(s1, str1), strcmp(s1, str1));
+	printf("s1 = %s -- s2 = %s\n", str1, str3);
+	printf("Comp result (ft_strcmp in asm) = %d -- Comp result (strcmp in c) = %d\n", ft_strcmp(str1, str3), strcmp(str1, str3));
+
 
 	return(0);
 }

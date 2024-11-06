@@ -9,7 +9,7 @@ DIR_SRC			= srcs
 DIR_OBJ			= objs
 DIR_LIB			= lib
 
-SFILES 			= srcs/ft_strlen.s srcs/ft_strcpy.s
+SFILES 			= srcs/ft_strlen.s srcs/ft_strcpy.s srcs/ft_strcmp.s
 OBJS			= $(patsubst $(DIR_SRC)/%.s, $(DIR_OBJ)/%.o, $(SFILES))
 DBG_OBJS		= $(patsubst $(DIR_SRC)/%.s, $(DIR_OBJ)/%.debug.o, $(SFILES))
 
