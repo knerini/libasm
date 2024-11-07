@@ -5,7 +5,7 @@ section .data
 ; **********
 
 ; Code section
-; Function to return the length of a string
+; Function to compare two strings lexicographically
 ; Call:
 ;	ft_strcmp(s1, s2);
 

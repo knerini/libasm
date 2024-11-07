@@ -5,7 +5,7 @@ section .data
 ; **********
 
 ; Code section
-; Function to return the length of a string
+; Function to copy a string source into a string dest
 ; Call:
 ;	ft_strcpy(dest, src);
 
