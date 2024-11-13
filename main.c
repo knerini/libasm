@@ -1,10 +1,14 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/errno.h>
 
 extern size_t ft_strlen(const char *str);
 extern char *ft_strcpy(char *dest, const char *src);
 extern int ft_strcmp(const char *s1, const char *s2);
+extern ssize_t ft_write(int fd, const void *buf, size_t count);
 
 int 	main(int ac, char **av)
 {
@@ -15,6 +19,9 @@ int 	main(int ac, char **av)
 	char *destasm1 = NULL, *destasm2 = NULL, *destasm3 = NULL;
 	char *s1 = "Hello world";
 	char *s2 = "Hella world";
+	char *hey = "Hey i'm print on stdout using write !";
+	ssize_t c_ret, asm_ret;
+	int fd;
 
 
 	if (ac > 1)
@@ -64,6 +71,20 @@ int 	main(int ac, char **av)
 	printf("s1 = %s -- s2 = %s\n", str1, str3);
 	printf("Comp result (ft_strcmp in asm) = %d -- Comp result (strcmp in c) = %d\n", ft_strcmp(str1, str3), strcmp(str1, str3));
 
+	printf("\n--------------------------------\nSECTION FT_WRITE\n\n");
+	printf("Write a simple sentence using write in c\n");
+	c_ret = write(1, hey, strlen(hey));
+	printf("\nWrite a simple sentence using write in asm\n");
+	asm_ret = ft_write(1, hey, ft_strlen(hey));
+	printf("\nReturn of write in c = %ld // return of ft_write in asm = %ld\n", c_ret, asm_ret);
+	fd = open("/unexisting_file", O_RDWR);
+	printf("Write in an unexisting file to generate an error using write in c\n");
+	c_ret = write(fd, hey, strlen(hey));
+	printf("\nReturn of write in c = %ld // error msg = %s\n", c_ret, strerror(errno));
+	printf("Write in an unexisting file to generate an error using ft_write in asm\n");
+	asm_ret = write(fd, hey, strlen(hey));
+	printf("\nReturn of ft_write in asm = %ld // error msg = %s\n", asm_ret, strerror(errno));
+	
 
 	return(0);
 }
