@@ -9,6 +9,7 @@ extern size_t ft_strlen(const char *str);
 extern char *ft_strcpy(char *dest, const char *src);
 extern int ft_strcmp(const char *s1, const char *s2);
 extern ssize_t ft_write(int fd, const void *buf, size_t count);
+extern ssize_t ft_read(int fd, void *buf, size_t count);
 
 int 	main(int ac, char **av)
 {
@@ -20,8 +21,9 @@ int 	main(int ac, char **av)
 	char *s1 = "Hello world";
 	char *s2 = "Hella world";
 	char *hey = "Hey i'm print on stdout using write !";
+	char *buf = NULL;
 	ssize_t c_ret, asm_ret;
-	int fd;
+	int fd_w, fd_r;
 
 
 	if (ac > 1)
@@ -77,13 +79,45 @@ int 	main(int ac, char **av)
 	printf("\nWrite a simple sentence using write in asm\n");
 	asm_ret = ft_write(1, hey, ft_strlen(hey));
 	printf("\nReturn of write in c = %ld // return of ft_write in asm = %ld\n", c_ret, asm_ret);
-	fd = open("/unexisting_file", O_RDWR);
+	fd_w = open("unexisting_file", O_RDWR);
 	printf("Write in an unexisting file to generate an error using write in c\n");
-	c_ret = write(fd, hey, strlen(hey));
+	c_ret = write(fd_w, hey, strlen(hey));
 	printf("\nReturn of write in c = %ld // error msg = %s\n", c_ret, strerror(errno));
 	printf("Write in an unexisting file to generate an error using ft_write in asm\n");
-	asm_ret = write(fd, hey, strlen(hey));
+	asm_ret = write(fd_w, hey, strlen(hey));
 	printf("\nReturn of ft_write in asm = %ld // error msg = %s\n", asm_ret, strerror(errno));
+
+	printf("\n--------------------------------\nSECTION FT_READ\n\n");
+	printf("Read the Makefile for 100 bytes using read in c\n\n");
+	fd_r = open("Makefile", O_RDONLY);
+	buf = malloc(sizeof(char) * (100 + 1));
+	c_ret = read(fd_r, buf, 100);
+	printf("Read return = %ld, buf = %s\n", c_ret, buf);
+	free(buf);
+	buf = NULL;
+	close(fd_r);
+	printf("Read the Makefile for 100 bytes using ft_read in asm\n\n");
+	fd_r = open("Makefile", O_RDONLY);
+	buf = malloc(sizeof(char) * (100 + 1));
+	asm_ret = ft_read(fd_r, buf, 100);
+	printf("Read return = %ld, buf = %s\n", asm_ret, buf);
+	free(buf);
+	buf = NULL;
+	close(fd_r);
+	printf("Read an unexisting file to generate an error using read in c\n");
+	fd_r = open("unexisting_file", O_RDONLY);
+	buf = malloc(sizeof(char) * (100 + 1));
+	c_ret = read(fd_r, buf, 100);
+	printf("Read return = %ld, buf = %s // error msg = %s\n", c_ret, buf, strerror(errno));
+	free(buf);
+	buf = NULL;
+	printf("Read an unexisting file to generate an error using ft_read in asm\n");
+	fd_r = open("unexisting_file", O_RDONLY);
+	buf = malloc(sizeof(char) * (100 + 1));
+	c_ret = ft_read(fd_r, buf, 100);
+	printf("Read return = %ld, buf = %s // error msg = %s\n", c_ret, buf, strerror(errno));
+	free(buf);
+	buf = NULL;
 	
 
 	return(0);
