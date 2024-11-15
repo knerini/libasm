@@ -10,6 +10,7 @@ extern char *ft_strcpy(char *dest, const char *src);
 extern int ft_strcmp(const char *s1, const char *s2);
 extern ssize_t ft_write(int fd, const void *buf, size_t count);
 extern ssize_t ft_read(int fd, void *buf, size_t count);
+extern char *ft_strdup(const char *s);
 
 int 	main(int ac, char **av)
 {
@@ -22,6 +23,7 @@ int 	main(int ac, char **av)
 	char *s2 = "Hella world";
 	char *hey = "Hey i'm print on stdout using write !";
 	char *buf = NULL;
+	char *c_dup = NULL, *asm_dup = NULL;
 	ssize_t c_ret, asm_ret;
 	int fd_w, fd_r;
 
@@ -119,6 +121,14 @@ int 	main(int ac, char **av)
 	free(buf);
 	buf = NULL;
 	
+	printf("\n--------------------------------\nSECTION FT_STRDUP\n\n");
+	c_dup = strdup(str1);
+	asm_dup = ft_strdup(str1);
+	printf("String duplicated with strdup in c = %s\nString duplicated with ft_strdup in asm = %s\n", c_dup, asm_dup);
+	if (c_dup)
+		free(c_dup);
+	if (asm_dup)
+		free(asm_dup);
 
 	return(0);
 }
