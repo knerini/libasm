@@ -26,7 +26,9 @@ ft_strdup:
 	add 	rax,		1				; Add 1 to the ft_strlen result for '\0'
 	push	rsi 						; Save rsi register on the stack before the call to malloc
 	mov 	rdi, 		rax				; Pass the result of ft_strlen to the rdi register
+	sub 	rsp, 		8 				; Align the stack state to 16 bytes
 	call 	malloc WRT ..plt
+	add 	rsp,		8 				; Restore the stack state
 	pop 	rsi 						; Get back the rsi register from the stack
 	test	rax,		rax				; Check if malloc returns null in case of error
 	je		_error						; If it's null jump to error section
