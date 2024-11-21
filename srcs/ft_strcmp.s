@@ -2,38 +2,45 @@
 
 section .data
 
-; **********
+%define 	S1			rdi				; char *s1;
+%define 	S2 			rsi 			; char *s2;
+%define 	C1 			al 				; char c1;
+%define		C2			bl 				; char c2;
+%define		I 			r8 				; int i;
 
 ; Code section
 ; Function to compare two strings lexicographically
 ; Call:
-;	ft_strcmp(s1, s2);
+;	int ft_strcmp(const char *s1, const char *s2);
 
 ; Arguments passed:
-; 1) rdi - address of s1
-; 2) rsi - address of s2
+; 1) rdi -> s1
+; 2) rsi -> s2
 
 ; Returns:
-; 1) rax - 0 if s1 and s2 are equal, positive integer if s1 > s2, negative integer if s1 < s2
+; 1) rax -> 0 if s1 and s2 are equal, positive integer if s1 > s2, negative integer if s1 < s2
 
 section .text
 global ft_strcmp
 ft_strcmp:
-	xor		r8,			r8					; r8 = 0, count initialized to 0
+	xor		I,			I				; i = 0;
 
-_cmp_loop:
-	mov		al,			byte [rdi + r8]		; Put the s1 actual byte in the al register to prepare ascii substraction
-	mov		bl,			byte [rsi + r8]		; Put the s2 actual byte in the bl register to prepare ascii substraction
-	sub 	al,			bl					; Proceed the the substraction
-	jne		_end							; If the result is not equal to 0, s1 and s2 are not equal, jump to the end section
-	cmp 	[rdi + r8],	byte 0				; Compare the null terminated '/0'
-	jz		_end							; Jump to the end section if it's the '/0'
-	inc		r8								; Increment to go to next char
-	jmp 	_cmp_loop						; Process again
+.cmp_loop:								; while (s1[i])
+	mov		C1,			byte [S1 + I]	; c1 = s1[i];
+	mov		C2,			byte [S2 + I]	; c2 = s2[i];
+	
+	sub 	C1,			C2				; if (c1 - c2 != 0)...
+	jne		.end						; ...goto .end; 
+	
+	cmp 	[S1 + I],	byte 0			; if (s1[i] == '\0')...
+	jz		.end						; ...goto .end;
+	
+	inc		I							; i++;
+	jmp 	.cmp_loop					; Loop again
 
-_end:
-	movsx	rax,		al 					; Widening signed conversion to return the result in rax
-	ret 
+.end:
+	movsx	rax,		C1 				; Widening signed conversion to return the result in rax
+	ret 								; return c1;
 
 ; Stack protection
 section .note.GNU-stack

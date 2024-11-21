@@ -2,7 +2,9 @@
 
 section .data
 
-extern __errno_location		; call the errno_location function to set the error for the syscall
+SYS_read 	equ 	0  					; call code for read system call
+
+extern __errno_location					; call the errno_location C function to set the error for the syscall
 
 ; Code section
 ; Function to read up to count bytes from the fd into the buffer
@@ -20,20 +22,21 @@ extern __errno_location		; call the errno_location function to set the error for
 section .text
 global ft_read
 ft_read:
-	mov		rax, 	0					; Call code for read system call
+	mov		rax, 	SYS_read			; Prepare read syscall
 	syscall
-	cmp 	rax, 	0					; Compare the rax register value to 0, after syscall rax contains the number of bytes written or an error code
-	jg		_end						; Jump to the end section if rax value is greater than 0
 
-_error:
-	neg		rax							; As it's an error code (negative), get the absolute value to get the error code
-	mov		r8,		rax					; Save the result of the write syscall in another register
-	call 	__errno_location WRT ..plt	; Call the extern C function __errno_location to get the pointer to the errno variable (WRT = With Respect To // plt = function call via Procedure Linkage Table)
-	mov		[rax],	r8					; As the address of errno variable is in rax register, put the previously saved error code in it by dereferencing the address
-	mov		rax,	-1					; As it's an error, the return has to be '-1'
+	test 	rax, 	rax					; if syscall not failed...
+	jg		.end						; ...goto .end; else goto .error;
 
-_end:
-	ret
+.error:
+	neg		rax							; Error code -> negative value so get the absolute value
+	mov		r8,		rax					; Save the result of the read syscall in another register
+	call 	__errno_location WRT ..plt
+	mov		[rax],	r8					; Put the value of r8 (value of the write syscall) into memory pointed by rax register
+	mov		rax,	-1					; Error returns -1 
+
+.end:
+	ret 								; return ssize_t
 		
 ; Stack protection
 section .note.GNU-stack
