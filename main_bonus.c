@@ -10,6 +10,8 @@ typedef struct 	s_list
 
 extern size_t ft_list_size(t_list *lst);
 extern void *ft_list_push_front(t_list **lst, void *data);
+extern void ft_list_sort(t_list **lst, int(*cmp)());
+extern int ft_strcmp(const char *s1, const char *s2);
 
 void print_list(t_list *lst)
 {
@@ -52,8 +54,16 @@ int main(int ac, char **av)
 	ft_list_push_front(&lst, var6);
 	printf("Print the list after elements were added\n");
 	print_list(lst);
+	
 	printf("--------------------------------\nSECTION FT_LIST_SIZE\n\n");
 	printf("The list is %ld size long\n", ft_list_size(lst));
+
+	printf("--------------------------------\nSECTION FT_LIST_SORT\n\n");
+	printf("Print the list before sorting:\n");
+	print_list(lst);
+	ft_list_sort(&lst, ft_strcmp);
+	printf("Print the list after sorting\n");
+	print_list(lst);
 
 	free(var1);
 	free(var2);

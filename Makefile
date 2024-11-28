@@ -14,7 +14,7 @@ DIR_OBJ_BONUS		= objs_bonus
 DIR_LIB				= lib
 
 SFILES 				= srcs/ft_strlen.s srcs/ft_strcpy.s srcs/ft_strcmp.s srcs/ft_write.s srcs/ft_read.s srcs/ft_strdup.s
-SBONUS 				= bonus/ft_list_size.s bonus/ft_list_push_front.s
+SBONUS 				= bonus/ft_list_size.s bonus/ft_list_push_front.s bonus/ft_list_sort.s
 OBJS				= $(patsubst $(DIR_SRC)/%.s, $(DIR_OBJ)/%.o, $(SFILES))
 OBJS_BONUS			= $(patsubst $(DIR_BONUS)/%.s, $(DIR_OBJ_BONUS)/%.o, $(SBONUS))
 DBG_OBJS			= $(patsubst $(DIR_SRC)/%.s, $(DIR_OBJ)/%.debug.o, $(SFILES))
