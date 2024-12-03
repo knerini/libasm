@@ -8,5 +8,5 @@ asm_prog_dbg
 c_asm_prog
 c_asm_prog_dbg
 c_bonus_asm_prog
-c_asm_bonus_prog_dbg
+c_bonus_asm_prog_dbg
 *.o
