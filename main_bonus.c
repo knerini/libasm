@@ -13,6 +13,7 @@ extern void *ft_list_push_front(t_list **lst, void *data);
 extern void ft_list_sort(t_list **lst, int(*cmp)());
 extern int ft_strcmp(const char *s1, const char *s2);
 extern void ft_list_remove_if(t_list **begin_list, void *data_ref, int(*cmp)(), void(*free_fct)(void *));
+extern int ft_atoi_base(char *str, char *base);
 
 void print_list(t_list *lst)
 {
@@ -37,6 +38,8 @@ int main(int ac, char **av)
 {
 	t_list *lst = NULL;
 	t_list *empty_lst = NULL;
+	char *str = NULL;
+	char *base = NULL;
 	char *var1 = strdup("Hello");
 	char *var2 = strdup("world!");
 	char *var3 = strdup("");
@@ -98,6 +101,84 @@ int main(int ac, char **av)
 		free(tmp->data);
 		free(tmp);
 	}
+
+	printf("\n\n--------------------------------SECTION FT_ATOI_BASE---------------------------\n\n");
+	printf(">>>Normal cases<<<\n");
+	str = "1234";
+	base = "0123456789";
+	printf("Number to convert : [%s] // Base [%s]\n", str, base);
+	printf("Result = %d\n", ft_atoi_base(str, base));
+	str = "+3";
+	base = "0123456789";
+	printf("Number to convert : [%s] // Base [%s]\n", str, base);
+	printf("Result = %d\n", ft_atoi_base(str, base));
+	str = "1234";
+	base = "0123456789abcdef";
+	printf("Number to convert : [%s] // Base [%s]\n", str, base);
+	printf("Result = %d\n", ft_atoi_base(str, base));
+	str = "lol";
+	base = "0123456789abcdefghijklmnopqrstuvwxyz";
+	printf("Number to convert : [%s] // Base [%s]\n", str, base);
+	printf("Result = %d\n", ft_atoi_base(str, base));
+	str = "00561b";
+	base = "0123456789abcdef";
+	printf("Number to convert : [%s] // Base [%s]\n", str, base);
+	printf("Result = %d\n", ft_atoi_base(str, base));
+	str = "1234";
+	base = "01";
+	printf("Number to convert : [%s] // Base [%s]\n", str, base);
+	printf("Result = %d\n", ft_atoi_base(str, base));
+	str = "0000001010";
+	base = "01";
+	printf("Number to convert : [%s] // Base [%s]\n", str, base);
+	printf("Result = %d\n", ft_atoi_base(str, base));
+	str = "-1234";
+	base = "0123456789";
+	printf("Number to convert : [%s] // Base [%s]\n", str, base);
+	printf("Result = %d\n", ft_atoi_base(str, base));
+	str = "963982";
+	base = "0123456789abcdef";
+	printf("Number to convert : [%s] // Base [%s]\n", str, base);
+	printf("Result = %d\n", ft_atoi_base(str, base));
+	printf(">>>Invalid base cases<<<\n");
+	str = "-1234";
+	base = " \n0123456789";
+	printf("Number to convert : [%s] // Base [%s]\n", str, base);
+	printf("Result = %d\n", ft_atoi_base(str, base));
+	str = "4346";
+	base = "";
+	printf("Number to convert : [%s] // Base [%s]\n", str, base);
+	printf("Result = %d\n", ft_atoi_base(str, base));
+	str = "1234";
+	base = "-0123456789";
+	printf("Number to convert : [%s] // Base [%s]\n", str, base);
+	printf("Result = %d\n", ft_atoi_base(str, base));
+	str = "1234";
+	base = "01234456789";
+	printf("Number to convert : [%s] // Base [%s]\n", str, base);
+	printf("Result = %d\n", ft_atoi_base(str, base));
+	printf(">>>Overflow cases<<<\n");
+	str = "3147483648";
+	base = "0123456789";
+	printf("Number to convert : [%s] // Base [%s]\n", str, base);
+	printf("Result = %d\n", ft_atoi_base(str, base));
+	str = "-3147483648";
+	base = "0123456789";
+	printf("Number to convert : [%s] // Base [%s]\n", str, base);
+	printf("Result = %d\n", ft_atoi_base(str, base));
+	printf(">>>Edge cases<<<\n");
+	str = "";
+	base = "0123456789";
+	printf("Number to convert : [%s] // Base [%s]\n", str, base);
+	printf("Result = %d\n", ft_atoi_base(str, base));
+	str = "+-346";
+	base = "0123456789";
+	printf("Number to convert : [%s] // Base [%s]\n", str, base);
+	printf("Result = %d\n", ft_atoi_base(str, base));
+	str = "\t\n\r\v\f34547";
+	base = "0123456789";
+	printf("Number to convert : [%s] // Base [%s]\n", str, base);
+	printf("Result = %d\n", ft_atoi_base(str, base));
 
 	return (0);
 }
