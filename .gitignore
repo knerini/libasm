@@ -3,10 +3,10 @@ asm_doc.sublime-workspace
 objs/*
 lib/*
 objs_bonus/*
-asm_prog
-asm_prog_dbg
-c_asm_prog
-c_asm_prog_dbg
-c_bonus_asm_prog
-c_bonus_asm_prog_dbg
+libasm
+libasm_dbg
+libasm_bonus
+libasm_dbg_bonus
+libasm_asm
+libasm_dbg_asm
 *.o
