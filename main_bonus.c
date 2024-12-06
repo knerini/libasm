@@ -12,6 +12,7 @@ extern size_t ft_list_size(t_list *lst);
 extern void *ft_list_push_front(t_list **lst, void *data);
 extern void ft_list_sort(t_list **lst, int(*cmp)());
 extern int ft_strcmp(const char *s1, const char *s2);
+extern char *ft_strdup(const char *s);
 extern void ft_list_remove_if(t_list **begin_list, void *data_ref, int(*cmp)(), void(*free_fct)(void *));
 extern int ft_atoi_base(char *str, char *base);
 
@@ -40,12 +41,12 @@ int main(int ac, char **av)
 	t_list *empty_lst = NULL;
 	char *str = NULL;
 	char *base = NULL;
-	char *var1 = strdup("Hello");
-	char *var2 = strdup("world!");
-	char *var3 = strdup("");
-	char *var4 = strdup("LOL!");
-	char *var5 = strdup("HO\0HO");
-	char *var6 = strdup("Hi there");
+	char *var1 = ft_strdup("Hello");
+	char *var2 = ft_strdup("world!");
+	char *var3 = ft_strdup("");
+	char *var4 = ft_strdup("LOL!");
+	char *var5 = ft_strdup("HO\0HO");
+	char *var6 = ft_strdup("Hi there");
 
 	printf("--------------------------------\nSECTION FT_LIST_PUSH_FRONT\n--------------------------------\n\n");
 	printf("Print lst before adding elements\n");

@@ -33,10 +33,10 @@ ft_strdup:
 
 	push	S 						; var1 = s (savec on stack)
 
-	sub 	rsp, 			8 		; Align the stack register before a call to an extern function
+	;sub 	rsp, 			8 		; Align the stack register before a call to an extern function
 	mov 	rdi, 			LEN		; Prepare the amount of memory to allocate
 	call 	malloc WRT ..plt
-	add 	rsp,			8 		; Restore the stack state
+	;add 	rsp,			8 		; Restore the stack state
 
 	pop 	S 						; s = var1 (retrieve from stack)
 	test	NEW_S,			NEW_S	; if malloc call failed...

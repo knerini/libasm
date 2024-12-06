@@ -73,7 +73,9 @@ main:
 	; ++++ ft_strdup part ++++
 
 	lea 	rdi, 	[rel s]			; Load the address of string s in rdi register to prepare the call to ft_strdup
+	sub 	rsp,	8 				; Align the stack register before a call to an extern function
 	call 	ft_strdup
+	add 	rsp, 	8 				; Restore the stack state
 	push	rax						; Put rax register on the stack to save the pointer to the duplicated string
 	
 	; ++++ print on stdout part ++++
