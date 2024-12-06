@@ -94,10 +94,10 @@ A properly formatted assembly source file consists of several main parts :
 `:` is used for comments. An Assembly code well commented is easier to read and to understand.
 ### Numbers
 - hexadecimal : preceded with '0x'
-- ocalt : followed by a 'q'
+- octal : followed by a 'q'
 - decimal : default radix, no special notation
 ### Constants
-- Define by 'equ' : `<name> equ <value>
+- Define by 'equ' : `<name> equ <value>`
 - Cannot be changed during a program execution
 - Constants are substitued for their defines values during assembly process so not assigned a memory location
 ### Data section
@@ -120,23 +120,66 @@ A properly formatted assembly source file consists of several main parts :
 ## Common instructions
 - `src` : source operand
 - `dest` : destination operand
+- `RXdest` : floating-point destination operand
 - `mem` : memory
 - `reg` : register (reg8, reg16, reg32, reg64)
 - `op` : operand (op8, op16, op32, op64)
 - `imm` : immediate (imm8, imm16, imm32, imm64)
 
 | Instruction | Purpose |
-| ---------- | ------------------------------------------------------- |
-| `mov <dest>, <src>` | `src` is copied from `src` into `dest`. Value of `src` is unchanged. `src` and `dest` must be of the same size, both cannot be memory. If memory to memory operation is requiredm two instructions must be used. Only way to access memory, use brackets '[]'. E.g., `mov rax, qword [var1]` = value of `var1` in `rax` // `mov rax, var1` = address of `var1` in `rax`. |
+| ---------- | ---------- |
+| `mov <dest>, <src>` | Copy `src` to `dest`. `dest` cannot be an immediate. `src` and `dest` must be of the same size, both cannot be memory. If memory to memory operation is required, two instructions must be used. Only way to access memory, use brackets '[]'. E.g., `mov rax, qword [var1]` = value of `var1` in `rax` // `mov rax, var1` = address of `var1` in `rax`. |
 | `lea <reg64>, <mem>` | Load Effective Address : place address of `mem` into `reg64`. |
-| `movzx <reg16>, <op8>`, `movzx <reg32>, <op8>`, `movzx <reg16>, <op16>`, `movzx <reg64>, <op8>`, `movzx <reg64>, <op16>` | Widening unsigned conversion : converts from a smaller type to a larger type. |
-| `cbw` (al into ax), `cwd` (dx:ax), `cwde` (ax into eax), `cdq` (edx:eax), `cdqe` (eax into rax), `cqo` (rdx:rax), `movsx <reg16>, <op8>`, `movsx <reg32>, <op8>`, `movsx <reg32>, <op16>`, `movsx <reg64>, <op8>`, `movsx <reg64>, <op16>`, `movsx <reg64>, <op32>`, `movsxd <reg64>, <op32>` | Widening signed conversion : work only with A register and sometimes use D register for result (rdx:rax). |
-| `add <dest>, <src>` | Addition instruction. Value of `src` is unchanged. `src` and `dest` must be of the same size, both cannot be memory. `dest` cannot be an immediate value. If a memory to memory addition operation is required, two instructions must be used. |
-| `inc <op>` | Incrementation. |
-| `adc <dest>, <src>` | Addition with carry. Same specification as `add` instruction. |
-| `sub <dest>, <src>` | Substraction instruction. Value of `src` is unchanged. `src` and `dest` must be of the same size, both cannot be memory. `dest` cannot be an immediate value. If a memory to memory substraction operation is required, two instructions must be used. |
-| `dec <op>` | Decrementation. |
-| `mul <src>` | Unsigned multiplication. `src` must be a memory location or a register. The A register must be used for one of the operands. Immediate operand is not allowed. Result will be place in the A and possibly D registers, based on the size being mutiplied. |
-| `imul <src>`, `imul <dest>, <src/imm32>`, `imul <dest>, <src>, <imm32>` | Signed multiplication. `dest` must be a register. For multiple operands bytes operand are not supported. For two operands `src/imm` operand may be a register, memory location or immediate value, with size of `imm` limited to the size of `src` up to double-word size. For three operands, two operands are multiplicated and the result is placed in `dest`, `src` must be a register or memory location and `imm` an immediate value with size of `imm` limited to the size of `src` up to double-word size. |
-| `div <src>` | Unsigned division. Division requires dividend must be a larger size than divisor. Like multiplication, division uses a combination of A register and D register. Divisor can be a register or a memory location but not an immediate. Result will be place in the A register and the remainder in either the `ah`, `dx`, `edx` or `rdx` register. The use of a larger size operand for dividend matches the single operand multiplication. For simple divisions, an appropriate conversion may be required in order to ensure dividend is set correctly. |
+| `movzx <dest>, <src>` | Unsigned widening conversion. Both operands cannot be memory. `dest` cannot be an immediate. Immediate values not allowed. |
+| `cbw` | Convert byte in `al` into word in `ax`. Only works for A register. |
+| `cwd` | Convert word in `ax` into double-word in `dx:ax`. Only works for A register and D register. |
+| `cwde` | Convert word in `ax` into double-word in `eax`. Only works for A register. |
+| `cdq` | Convert double-word in `eax` into quadword in `edx:eax`. Only works for A register and D register. |
+| `cdqe` | Convert double-word in `eax` into quadword in `rax`. Only works for A register. |
+| `cqo` | Convert quadword in `rax` into quadword in `rdx:rax`. Only works for A register and D register. |
+| `movsx <dest>, <src>` | Signed widening conversion. Both operands cannot be memory. `dest` cannot be an immediate. Immediate values not allowed. |
+| `add <dest>, <src>` | Addition instruction (`dest` + `src`), result placed in `dest`. `dest` cannot be an immediate. `src` and `dest` must be of the same size, both cannot be memory. If a memory to memory addition operation is required, two instructions must be used. |
+| `inc <op>` | Increment `op` by 1. `op` cannot be an immediate. |
+| `adc <dest>, <src>` | Addition instruction (`dest` + `src`), result placed in `dest` and any previous carry is stroored in the `CF` register. `dest` cannot be an immediate. `src` and `dest` must be of the same size, both cannot be memory. If a memory to memory addition operation is required, two instructions must be used. |
+| `sub <dest>, <src>` | Substraction instruction (`dest` - `src`), result placed in `dest`. `dest` cannot be an immediate. `src` and `dest` must be of the same size, both cannot be memory. If a memory to memory substraction operation is required, two instructions must be used. |
+| `dec <op>` | Decrement `op` by 1. `op` cannot be an immediate. |
+| `mul <src>` | Unsigned multiplication. Multiply A register times the `src`. `src` cannot be an immediate. Result will be place in the A and possibly D registers, based on the size being mutiplied. |
+| `imul <src>`, `imul <dest>, <src/imm32>`, `imul <dest>, <src>, <imm32>` | Signed multiplication. `src` cannot be an immediate. Single operand : same as unsigned multiplication. Two operands : result placed in dest (`dest` = `dest` * `src/imm32`). Three operands : result placed in dest (`dest` = `src` * `imm32`). |
+| `div <src>` | Unsigned division. Divide A/D register by `src`.  `src` cannot be an immediate. Result will be place in the A register and the remainder in either the `ah`, `dx`, `edx` or `rdx` register. For simple divisions, an appropriate conversion may be required in order to ensure dividend is set correctly. |
 | `idiv <src>` | Signed division. Same specifications as unsigned division. |
+| `and <dest>, <src>` | AND logical instruction. Result placed in `dest`. Both operands cannot be memory.`dest` cannot be an immediate. |
+| `or <dest>, <src>` | OR logical instruction. Result placed in `dest`. Both operands cannot be memory.`dest` cannot be an immediate. |
+| `xor <dest>, <src>` | XOR logical instruction. Result placed in `dest`. Both operands cannot be memory.`dest` cannot be an immediate. |
+| `not <op>` | NOT logical instruction.`op` cannot be an immediate. |
+| `shl <dest>, <imm>`, `shl <dest>, cl` | Perform logical shift left operation on `dest`. Zero fills from right. `imm` or the value in `cl` register must be between 1 and 64. `dest` cannot be an immediate. |
+| `shr <dest>, <imm>`, `shr <dest>, cl` | Perform logical shift right operation on `dest`. Zero fills from left. `imm` or the value in `cl` register must be between 1 and 64. `dest` cannot be an immediate. |
+| `sal <dest>, <imm>`, `sal <dest>, cl` | Perform arithmetic shift left operation on `dest`. Zero fills from right. `imm` or the value in `cl` register must be between 1 and 64. `dest` cannot be an immediate. |
+| `sar <dest>, <imm>`, `sar <dest>, cl` | Perform arithmetic shift right operation on `dest`. Zero fills from left. `imm` or the value in `cl` register must be between 1 and 64. `dest` cannot be an immediate. |
+| `rol <dest>, <imm>`, `rol <dest>, cl` | Perform rotate left operation on `dest`. `imm` or the value in `cl` register must be between 1 and 64. `dest` cannot be an immediate. |
+| `ror <dest>, <imm>`, `ror <dest>, cl` | Perform rotate right operation on `dest`. `imm` or the value in `cl` register must be between 1 and 64. `dest` cannot be an immediate. |
+| `cmp <op1>, <op2>` | Compare `op1` with `op2`. Results are stored in flag registers. Operands are not changed. Both operands cannot be memory. `op1` cannot be an immediate. |
+| `je <label>` | Based on preceding comparison instruction, jump to `label` if `op1` == `op2`. Label must be defined exactly once. |
+| `jne <label>` | Based on preceding comparison instruction, jump to `label` if `op1` != `op2`. Label must be defined exactly once. |
+| `jl <label>` | For signed data, based on preceding comparison instruction, jump to `label` if `op1` < `op2`. Label must be defined exactly once. |
+| `jle <label>` | For signed data, based on preceding comparison instruction, jump to `label` if `op1` <= `op2`. Label must be defined exactly once. |
+| `jg <label>` | For signed data, based on preceding comparison instruction, jump to `label` if `op1` > `op2`. Label must be defined exactly once. |
+| `jge <label>` | For signed data, based on preceding comparison instruction, jump to `label` if `op1` >= `op2`. Label must be defined exactly once. |
+| `jb <label>` | For unsigned data, based on preceding comparison instruction, jump to `label` if `op1` < `op2`. Label must be defined exactly once. |
+| `jbe <label>` | For unsigned data, based on preceding comparison instruction, jump to `label` if `op1` <= `op2`. Label must be defined exactly once. |
+| `ja <label>` | For unsigned data, based on preceding comparison instruction, jump to `label` if `op1` > `op2`. Label must be defined exactly once. |
+| `jae <label>` | For unsigned data, based on preceding comparison instruction, jump to `label` if `op1` >= `op2`. Label must be defined exactly once. |
+| `loop <label>` | Decrement rcx register and jump to `label` if `rcx` is != 0. Label must be defined exactly once. |
+| `push <op64>` | Push `op64` on the stack. Adjusts `rsp` accordingly. Operand is unaltered. |
+| `pop <op64>` | Pop `op64` from the stack. Adjusts `rsp` accordingly. The operand may not be an immediate value. Operand is overwritten. |
+| `call <funcName>` | Calls a function. Push `rip` register and jump to the `funcName`. |
+| `ret` | Return from a function. Pop the stack into `rip` register, effecting a jump to the line after the call. |
+
+| Floating-points' instruction | Purpose |
+| ---------- | ---------- |
+| `movss <dest>, <src>` | Copy 32-bit `src` to 32-bit `dest`. Both operands cannot be memory. Operands cannot be an immediate. |
+| `movsd <dest>, <src>` | Copy 64-bit `src` to 64-bit `dest`. Both operands cannot be memory. Operands cannot be an immediate. |
+| `cvtss2sd <RXdest>, <src>` | Convert 32-bit `src` to 64-bit `dest`. `dest` floating-point register. `src` cannot be an immediate. |
+| `cvtss2ss <RXdest>, <src>` | Convert 64-bit `src` to 32-bit `dest`. `dest` floating-point register. `src` cannot be an immediate. |
+| `cvtss2si <reg>, <src>` | Convert 32-bit `src` to the 32-bit integer `dest`. `dest` must be register. `src` cannot be an immediate. |
+| `cvtsd2si <reg>, <src>` | Convert 64-bit `src` to the 32-bit integer `dest`. `dest` must be register. `src` cannot be an immediate. |
+| `cvtsi2ss <RXdest>, <src>` | Convert 32-bit integer `src` to the 32-bit floating-point `dest`. `dest` must be floating-point register. `src` cannot be an immediate. |
