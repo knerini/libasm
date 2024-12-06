@@ -129,6 +129,13 @@ int 	main(int ac, char **av)
 		free(c_dup);
 	if (asm_dup)
 		free(asm_dup);
+	c_dup = strdup(str3);
+	asm_dup = ft_strdup(str3);
+	printf("Empty string duplicated with strdup in c = %s\nString duplicated with ft_strdup in asm = %s\n", c_dup, asm_dup);
+	if (c_dup)
+		free(c_dup);
+	if (asm_dup)
+		free(asm_dup);
 
 	return(0);
 }
