@@ -26,7 +26,7 @@ ft_read:
 	syscall
 
 	test 	rax, 	rax					; if syscall not failed...
-	jg		.end						; ...goto .end; else goto .error;
+	jge		.end						; ...goto .end; else goto .error;
 
 .error:
 	neg		rax							; Error code -> negative value so get the absolute value
