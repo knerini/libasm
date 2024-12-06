@@ -18,11 +18,11 @@ The bonus part lets dive more in the Assembly langage with linked-list manipulta
 
 ## NASM
 It's an assembler for the x86 CPU Architecture : [NASM](https://www.nasm.us/).
-`nasm -f elf64 <filename>` to compile with the x86_64 format on Linux
-`nasm -f elf64 -g -F dwarf <filename>` to compile with the x86_64 format on Linux with debugging information and specifying the debugging format
+`nasm -f elf64 <filename>` to compile with the x86_64 format on Linux.
+`nasm -f elf64 -g -F dwarf <filename>` to compile with the x86_64 format on Linux with debugging information and specifying the debugging format.
 
 ## GDB
-Without a debugger it's not possible to identify bugs and resolve them : [GDB](https://sourceware.org/gdb/documentation/)
+Without a debugger it's not possible to identify bugs and resolve them : [GDB](https://sourceware.org/gdb/documentation/).
 **Commands used**
 
 | Command | Purpose |
@@ -100,6 +100,8 @@ A properly formatted assembly source file consists of several main parts :
 - Define by 'equ' : `<name> equ <value>`
 - Cannot be changed during a program execution
 - Constants are substitued for their defines values during assembly process so not assigned a memory location
+### Label
+A program label is the target, or location to jump to, for control statements. Program labels may be defined only once.
 ### Data section
 - `section .data`.
 -  All initialized variables and constants are placed in this section.
@@ -107,7 +109,7 @@ A properly formatted assembly source file consists of several main parts :
 - Supported data types : db (8-bits), dw (16-bits), dd (32-bits), dq (64-bits), ddq (128-bits integer), dt (128-bits floats).
 - Initialized arrays are defined with coma separated values.
 ### BSS section
-- `section .bss`.
+- `section .bss`.saoûl
 - All uninitialized variables are placed in this section.
 - Variable definition : `<variableName> <resType> <count>`.
 - Supported data types : resb (8-bits), resw (16-bits), resd (32-bits), resq (64-bits), resdq (128-bits).
@@ -128,7 +130,7 @@ A properly formatted assembly source file consists of several main parts :
 
 | Instruction | Purpose |
 | ---------- | ---------- |
-| `mov <dest>, <src>` | Copy `src` to `dest`. `dest` cannot be an immediate. `src` and `dest` must be of the same size, both cannot be memory. If memory to memory operation is required, two instructions must be used. Only way to access memory, use brackets '[]'. E.g., `mov rax, qword [var1]` = value of `var1` in `rax` // `mov rax, var1` = address of `var1` in `rax`. |
+| `mov <dest>, <src>` | Copy `src` to `dest`. `dest` cannot be an immediate. `src` and `dest` must be of the same size, both cannot be memory. |
 | `lea <reg64>, <mem>` | Load Effective Address : place address of `mem` into `reg64`. |
 | `movzx <dest>, <src>` | Unsigned widening conversion. Both operands cannot be memory. `dest` cannot be an immediate. Immediate values not allowed. |
 | `cbw` | Convert byte in `al` into word in `ax`. Only works for A register. |
@@ -178,8 +180,96 @@ A properly formatted assembly source file consists of several main parts :
 | ---------- | ---------- |
 | `movss <dest>, <src>` | Copy 32-bit `src` to 32-bit `dest`. Both operands cannot be memory. Operands cannot be an immediate. |
 | `movsd <dest>, <src>` | Copy 64-bit `src` to 64-bit `dest`. Both operands cannot be memory. Operands cannot be an immediate. |
-| `cvtss2sd <RXdest>, <src>` | Convert 32-bit `src` to 64-bit `dest`. `dest` floating-point register. `src` cannot be an immediate. |
-| `cvtss2ss <RXdest>, <src>` | Convert 64-bit `src` to 32-bit `dest`. `dest` floating-point register. `src` cannot be an immediate. |
-| `cvtss2si <reg>, <src>` | Convert 32-bit `src` to the 32-bit integer `dest`. `dest` must be register. `src` cannot be an immediate. |
-| `cvtsd2si <reg>, <src>` | Convert 64-bit `src` to the 32-bit integer `dest`. `dest` must be register. `src` cannot be an immediate. |
-| `cvtsi2ss <RXdest>, <src>` | Convert 32-bit integer `src` to the 32-bit floating-point `dest`. `dest` must be floating-point register. `src` cannot be an immediate. |
+| `cvtss2sd <RXdest>, <src>` | Convert 32-bit `src` to 64-bit `RXdest`. `RXdest` floating-point register. `src` cannot be an immediate. |
+| `cvtss2ss <RXdest>, <src>` | Convert 64-bit `src` to 32-bit `RXdest`. `RXdest` floating-point register. `src` cannot be an immediate. |
+| `cvtss2si <reg>, <src>` | Convert 32-bit `src` to the 32-bit integer `dest`. `dest` must be a register. `src` cannot be an immediate. |
+| `cvtsd2si <reg>, <src>` | Convert 64-bit `src` to the 32-bit integer `reg`. `dest` must be a register. `reg` cannot be an immediate. |
+| `cvtsi2ss <RXdest>, <src>` | Convert 32-bit integer `src` to the 32-bit floating-point `RXdest`. `RXdest` must be a floating-point register. `src` cannot be an immediate. |
+| `cvtsi2sd <RXdest>, <src>` | Convert 32-bit integer `src` to the 64-bit floating-point `RXdest`. `RXdest` must be a floating-point register. `src` cannot be an immediate. |
+| `addss <RXdest>, <src>` | Addition instruction for two 32-bits operands (`RXdest` + `src`), result placed in `RXdest`. `src` cannot be an immediate. |
+| `addsd <RXdest>, <src>` | Addition instruction for two 64-bits operands (`RXdest` + `src`), result placed in `RXdest`. `src` cannot be an immediate. |
+| `subss <RXdest>, <src>` | Substraction instruction for two 32-bits operands (`RXdest` - `src`), result placed in `RXdest`. `src` cannot be an immediate. |
+| `subsd <RXdest>, <src>` | Substraction instruction for two 64-bits operands (`RXdest` - `src`), result placed in `RXdest`. `src` cannot be an immediate. |
+| `mulss <RXdest>, <src>` | Multiplication instruction for two 32-bits operands (`RXdest` * `src`), result placed in `RXdest`. `src` cannot be an immediate. |
+| `mulsd <RXdest>, <src>` | Multiplication instruction for two 64-bits operands (`RXdest` * `src`), result placed in `RXdest`. `src` cannot be an immediate. |
+| `divss <RXdest>, <src>` | Division instruction for two 32-bits operands (`RXdest` / `src`), result placed in `RXdest`. `src` cannot be an immediate. |
+| `divsd <RXdest>, <src>` | Division instruction for two 64-bits operands (`RXdest` / `src`), result placed in `RXdest`. `src` cannot be an immediate. |
+| `sqrtss <RXdest>, <src>` | Square root instruction of `src` 32-bits operand, result placed in `RXdest`. `src` cannot be an immediate. |
+| `sqrtsd <RXdest>, <src>` | Square root instruction of `src` 64-bits operand, result placed in `RXdest`. `src` cannot be an immediate. |
+| `ucomiss <RXdest>, <src>` | Compare two 32-bit operands. Results are placed in the Flag registers. Neither operand is changed. `src` operand may be a floating-point register or memory, but not be an immediate. |
+| `ucomisd <RXdest>, <src>` | Compare two 64-bit operands. Results are placed in the Flag registers. Neither operand is changed. `src` operand may be a floating-point register or memory, but not be an immediate. |
+
+## Addressing modes
+- Only way to access memory is with the brackets '[]'.
+- When accessing memory, in many cases the operand size is clear. However, for some instructions the size can be ambiguous. In such a case, operand size must be specified with the size qualifier.
+- Examples : `mov rax, qword [var1]` => copies value of `var1` in `rax` // `mov rax, var1` => copies address of `var1` in `rax`.
+### Accessing element in arrays
+- General format : [baseAddr + (indexReg * scaleValue) + displacement]
+- baseAddr : register or variable name.
+- indexReg : must be a register.
+- scaleValue : immediate value of 1, 2, 4, 8.
+- displacement : musr be an immediate value.
+## Stack
+- Stack is LIFO : Last-In, First-Out.
+## Macros
+- Must be defined before usage.
+- Should be placed in the source file before data and code sections.
+- Used in the text section.
+### Single line macro
+- Defined using `%define` directive.
+```
+%define mulby4(x) shl x, 2 ; definition
+mulby4(rax) ; use
+```
+### Multiple line macro
+- Definition :
+```
+%macro <name> <number of arguments>
+; body of the macro
+%endmacro
+```
+- Arguments can be referenced within the macro by `%<number>`.
+- In order to use labels, the labels within the macro must be prefixing the label name with a '%%'. This will ensure that calling the same macro multiple times will use a different label each time.
+- Must be placed in the code segment and referred to by name with appropriate number of arguments.
+## Functions
+- Declaration :
+```
+global <funcName>
+<funcName>:
+; function body
+ret
+```
+- Placed in text section.
+- Must be defined only once.
+- Functions cannot be nested.
+- Linkage : using `call <funcName>` and `ret` instructions.
+- `call` tranfers control to the named function. Works by saving the address of where to return when the function completes. Pushes the content of the `rip` register on the stack.
+- `ret` returns the control back to the calling routine. Used in a procedure to return. Pops the current top of the stack into the `rip` register.
+- Since stack is used to support the linkage, it is important that within the function the stack must not be corrupted. Any items pushed must be popped, if not this would cause the processor to attempt to execute code at a wrong location and the process to crash.
+### Argument transmission
+Calling routine is referred to as the "caller" and the routine being called is referred to as the "callee".
+#### Placing values in registers
+- Easiest but limited to the number of registers.
+- Used for 6 integer arguments.
+- Used for system calls.
+#### Globally defined variables
+- Generally poor practice, potentially confusing, and will not work in many cases.
+- Occasionally useful in limited circumstances.
+#### Putting values and/or addresses on stack
+- No specific limit to count of arguments that can be passed.
+- Incurs higher run-time overhead.
+#### Parameter passing
+| Argument number | Arg. size 64-bits | Arg. size 32-bits | Arg. size 16-bits | Arg. size 8-bits |
+| ---------- | ---------- | ---------- | ---------- | ---------- |
+| 1 | rdi | edi | di | dil |
+| 2 | rsi | esi | si | sil |
+| 3 | rdx | edx | dx | dl |
+| 4 | rcx | ecx | cx | cl |
+| 5 | r8 | r8d | r8w | r8b |
+| 6 | r8 | r9d | r9w | r9b |
+
+- Any additional arguments are passed on the stack. The standard calling convention requires that, when passing arguments on th stackm the arguments should be pushed  in reverse order.
+- For floating-point arguments, the registers `xmm0` to `xmm7` are used in that order for the first eight float arguments.
+- When function is completed, the calling routine is responsible for clearing the arguments from the stack. Stack point `rsp` is adjusted as necessary to clear the arguments off the stack. Since each argument is 8 bytesm the adjustment would be adding [(number of arguments) * 8] to the `rsp`.
+- For value returning functions, the result is placed in A register (`xmm0` for floating-points) based on the size of the value being returned.
+### Register usage
