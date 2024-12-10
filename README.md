@@ -100,8 +100,22 @@ A properly formatted assembly source file consists of several main parts :
 - Define by 'equ' : `<name> equ <value>`
 - Cannot be changed during a program execution
 - Constants are substitued for their defines values during assembly process so not assigned a memory location
+- Example from my code **ft_write.s** :
+> ```
+> SYS_write equ 1       ; define a constant named SYS_write with a value of 1
+> [...]
+> mov rax, SYS_write    ; put SYS_write in rax register, same as "mov rax, 1" with more clarity of what is intented
+> ```
 ### Label
 A program label is the target, or location to jump to, for control statements. Program labels may be defined only once.
+Example from my code **ft_strdup.s** :
+> ```
+> test NEW_S, NEW_S    ; comparison instruction
+> je .error            ; condition jump to a label named .error
+> [...]
+> .label:              ; start of the label section named .error
+> [...]
+> ```
 ### Data section
 - `section .data`.
 -  All initialized variables and constants are placed in this section.
@@ -146,19 +160,19 @@ A program label is the target, or location to jump to, for control statements. P
 | `sub <dest>, <src>` | Substraction instruction (`dest` - `src`), result placed in `dest`. `dest` cannot be an immediate. `src` and `dest` must be of the same size, both cannot be memory. If a memory to memory substraction operation is required, two instructions must be used. |
 | `dec <op>` | Decrement `op` by 1. `op` cannot be an immediate. |
 | `mul <src>` | Unsigned multiplication. Multiply A register times the `src`. `src` cannot be an immediate. Result will be place in the A and possibly D registers, based on the size being mutiplied. |
-| `imul <src>`, `imul <dest>, <src/imm32>`, `imul <dest>, <src>, <imm32>` | Signed multiplication. `src` cannot be an immediate. Single operand : same as unsigned multiplication. Two operands : result placed in dest (`dest` = `dest` * `src/imm32`). Three operands : result placed in dest (`dest` = `src` * `imm32`). |
+| `imul <src>`/ `imul <dest>, <src/imm32>` / `imul <dest>, <src>, <imm32>` | Signed multiplication. `src` cannot be an immediate. Single operand : same as unsigned multiplication. Two operands : result placed in dest (`dest` = `dest` * `src/imm32`). Three operands : result placed in dest (`dest` = `src` * `imm32`). |
 | `div <src>` | Unsigned division. Divide A/D register by `src`.  `src` cannot be an immediate. Result will be place in the A register and the remainder in either the `ah`, `dx`, `edx` or `rdx` register. For simple divisions, an appropriate conversion may be required in order to ensure dividend is set correctly. |
 | `idiv <src>` | Signed division. Same specifications as unsigned division. |
 | `and <dest>, <src>` | AND logical instruction. Result placed in `dest`. Both operands cannot be memory.`dest` cannot be an immediate. |
 | `or <dest>, <src>` | OR logical instruction. Result placed in `dest`. Both operands cannot be memory.`dest` cannot be an immediate. |
 | `xor <dest>, <src>` | XOR logical instruction. Result placed in `dest`. Both operands cannot be memory.`dest` cannot be an immediate. |
 | `not <op>` | NOT logical instruction.`op` cannot be an immediate. |
-| `shl <dest>, <imm>`, `shl <dest>, cl` | Perform logical shift left operation on `dest`. Zero fills from right. `imm` or the value in `cl` register must be between 1 and 64. `dest` cannot be an immediate. |
-| `shr <dest>, <imm>`, `shr <dest>, cl` | Perform logical shift right operation on `dest`. Zero fills from left. `imm` or the value in `cl` register must be between 1 and 64. `dest` cannot be an immediate. |
-| `sal <dest>, <imm>`, `sal <dest>, cl` | Perform arithmetic shift left operation on `dest`. Zero fills from right. `imm` or the value in `cl` register must be between 1 and 64. `dest` cannot be an immediate. |
-| `sar <dest>, <imm>`, `sar <dest>, cl` | Perform arithmetic shift right operation on `dest`. Zero fills from left. `imm` or the value in `cl` register must be between 1 and 64. `dest` cannot be an immediate. |
-| `rol <dest>, <imm>`, `rol <dest>, cl` | Perform rotate left operation on `dest`. `imm` or the value in `cl` register must be between 1 and 64. `dest` cannot be an immediate. |
-| `ror <dest>, <imm>`, `ror <dest>, cl` | Perform rotate right operation on `dest`. `imm` or the value in `cl` register must be between 1 and 64. `dest` cannot be an immediate. |
+| `shl <dest>, <imm>` / `shl <dest>, cl` | Perform logical shift left operation on `dest`. Zero fills from right. `imm` or the value in `cl` register must be between 1 and 64. `dest` cannot be an immediate. |
+| `shr <dest>, <imm>` / `shr <dest>, cl` | Perform logical shift right operation on `dest`. Zero fills from left. `imm` or the value in `cl` register must be between 1 and 64. `dest` cannot be an immediate. |
+| `sal <dest>, <imm>` / `sal <dest>, cl` | Perform arithmetic shift left operation on `dest`. Zero fills from right. `imm` or the value in `cl` register must be between 1 and 64. `dest` cannot be an immediate. |
+| `sar <dest>, <imm>` / `sar <dest>, cl` | Perform arithmetic shift right operation on `dest`. Zero fills from left. `imm` or the value in `cl` register must be between 1 and 64. `dest` cannot be an immediate. |
+| `rol <dest>, <imm>` / `rol <dest>, cl` | Perform rotate left operation on `dest`. `imm` or the value in `cl` register must be between 1 and 64. `dest` cannot be an immediate. |
+| `ror <dest>, <imm>` / `ror <dest>, cl` | Perform rotate right operation on `dest`. `imm` or the value in `cl` register must be between 1 and 64. `dest` cannot be an immediate. |
 | `cmp <op1>, <op2>` | Compare `op1` with `op2`. Results are stored in flag registers. Operands are not changed. Both operands cannot be memory. `op1` cannot be an immediate. |
 | `je <label>` | Based on preceding comparison instruction, jump to `label` if `op1` == `op2`. Label must be defined exactly once. |
 | `jne <label>` | Based on preceding comparison instruction, jump to `label` if `op1` != `op2`. Label must be defined exactly once. |
@@ -203,14 +217,34 @@ A program label is the target, or location to jump to, for control statements. P
 - Only way to access memory is with the brackets '[]'.
 - When accessing memory, in many cases the operand size is clear. However, for some instructions the size can be ambiguous. In such a case, operand size must be specified with the size qualifier.
 - Examples : `mov rax, qword [var1]` => copies value of `var1` in `rax` // `mov rax, var1` => copies address of `var1` in `rax`.
+- Examples from my code **ft_list_sort.s** :
+> ```
+> mov CURRENT, [rdi]        ; copies the value storred at the memory address pointed to by rdi register into CURRENT (r13 register for my code)
+> [...]
+> mov CURRENT, NEXT_NODE    ; copies the value of NEXT_NODE (r13 register) into CURRENT (r12 register)
+> ```
 ### Accessing element in arrays
 - General format : [baseAddr + (indexReg * scaleValue) + displacement]
 - baseAddr : register or variable name.
 - indexReg : must be a register.
 - scaleValue : immediate value of 1, 2, 4, 8.
-- displacement : musr be an immediate value.
+- displacement : must be an immediate value.
+- Example from my code **ft_list_size.s** :
+> ```
+> next equ 8               ; define a constant named next with a value of 8
+> [...]
+> mov rdi, [rdi + next]    ; updates rdi register to the value storred at the memory address offset by 8 bytes from the address currently in rdi register
+> ```
 ## Stack
 - Stack is LIFO : Last-In, First-Out.
+- Example from my code **ft_list_push_front.s** :
+> ```
+> push LST     ; push the LST (rdi register) on the stack first
+> push DATA    ; push DATA (rsi register) on the stack then
+> [...]
+> pop DATA     ; pop DATA (rsi register) first
+> pop LST      ; pop LST (rdi register) then
+> ```
 ## Macros
 - Must be defined before usage.
 - Should be placed in the source file before data and code sections.
@@ -221,6 +255,14 @@ A program label is the target, or location to jump to, for control statements. P
 %define mulby4(x) shl x, 2 ; definition
 mulby4(rax) ; use
 ```
+Example from my code **ft_strcpy.s** :
+>  ```
+>  %define SRC rsi      ; for code clarity rsi register is named SRC
+>  %define I r8         ; for code clarity r8 register is named I
+>  %define C al         ; for code clarity al register is named C
+>  [...]
+>  mov C, [DEST + I]    ; copies the value storred at the memory address pointed to by DEST (rsi register) offset by I (r8 register) bytes into C (al register)
+>  ```
 ### Multiple line macro
 - Definition :
 ```
@@ -231,6 +273,26 @@ mulby4(rax) ; use
 - Arguments can be referenced within the macro by `%<number>`.
 - In order to use labels, the labels within the macro must be prefixing the label name with a '%%'. This will ensure that calling the same macro multiple times will use a different label each time.
 - Must be placed in the code segment and referred to by name with appropriate number of arguments.
+- Example from my code **ft_list_remove_if.s** :
+> ```
+> %macro PUSH_REG 0    ; macro to push some registers on the stack
+> push rdi
+> push rsi
+> [...]
+> push r10
+> %endmacro
+> %macro POP_REG 0    ; macro to pop previously pushed registers from the stack
+> pop r10
+> [...]
+> pop rsi
+> pop rdi
+> %endmacro
+> [...]
+> .free_node:
+> PUSH_REG            ; call the macro
+> [...]
+> POP_REG             ; call the macro
+> ```
 ## Functions
 - Declaration :
 ```
@@ -270,6 +332,6 @@ Calling routine is referred to as the "caller" and the routine being called is r
 
 - Any additional arguments are passed on the stack. The standard calling convention requires that, when passing arguments on th stackm the arguments should be pushed  in reverse order.
 - For floating-point arguments, the registers `xmm0` to `xmm7` are used in that order for the first eight float arguments.
-- When function is completed, the calling routine is responsible for clearing the arguments from the stack. Stack point `rsp` is adjusted as necessary to clear the arguments off the stack. Since each argument is 8 bytesm the adjustment would be adding [(number of arguments) * 8] to the `rsp`.
+- When function is completed, the calling routine is responsible for clearing the arguments from the stack. Stack point `rsp` is adjusted as necessary to clear the arguments off the stack. Since each argument is 8 bytes the adjustment would be adding [(number of arguments) * 8] to the `rsp`.
 - For value returning functions, the result is placed in A register (`xmm0` for floating-points) based on the size of the value being returned.
 ### Register usage
