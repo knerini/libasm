@@ -373,8 +373,9 @@ There are many operations taht an application program must use the operating sys
 - Logically similar to calling a function that may require privileges to operate which is why control is transferred to the operating system.
 - Arguments are placed in the standard argument registers.
 - Determine which system service is desired with a specific call code placed in `rax` : [Linux system call table for x86_64](https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/)
+
 | Register | Usage |
-| ---------- | ----------|
+| ---------- | ---------- |
 | rax | Call code |
 | rdi | 1st argument (if needed) |
 | rsi | 2nd argument (if needed) |
@@ -382,3 +383,31 @@ There are many operations taht an application program must use the operating sys
 | r10 | 4th argument (if needed) |
 | r8 | 5th argument (if needed) |
 | r9 | 6th argument (if needed) |
+
+- Each system call use a different number of arguments (from none up to 6).
+- After call code and any arguments are set, the `syscall` instruction is executed. The instruction will pause the current process and transfer control to the operating system which will attempt to perform the specified service. When the system service returns, the process will be resumed.
+- Example from my code **ft_write.s** :
+> ```
+> SYS_write equ 1       ; call code for write system call
+> [...]
+> mov rax, SYS_write    ; Prepare write syscall
+> syscall
+> ```
+## Multiple Souce Files
+- If a function is called from a source file and the function code is not located in the current source file, the assemble will generate an error. Same is applied for variables accessed that are not located in the current file.
+- Use the `extern` statement : `extern <symbol Name>`.
+- It is used to call a hugh-level language function too.
+- Example from my code **ft_strdup.s** :
+> ```
+> extern __errno_location    ; errno_location C function
+> extern malloc              ; malloc C function
+> extern ft_strlen           ; ft_strlen function
+> extern ft_strcpy           ; ft_strcpy function
+> [...]
+> call ft_strlen             ; process to the call of the ft_strlen function in another file
+> add LEN, 1                 ; add 1 to the length for '\0'
+> [...]
+> mov rdi, LEN               ; prepare the amount of memory to allocate (argument for the malloc C function)
+> call malloc WRT ..plt      ; process to the C function call
+> ```
+- `WRT ..plt` : With Respect To Procedure Linkage Table. Refers to a specific syntax used when dealing with position-independent code (PIC) and shared libraries in the context of dynamic linking. In NASM, `WRT ..plt` tells the assembler to refer to the PLT entry for the given symbol rather than its actual address or Global Offset Table (GOT) entry.
