@@ -330,8 +330,55 @@ Calling routine is referred to as the "caller" and the routine being called is r
 | 5 | r8 | r8d | r8w | r8b |
 | 6 | r8 | r9d | r9w | r9b |
 
-- Any additional arguments are passed on the stack. The standard calling convention requires that, when passing arguments on th stackm the arguments should be pushed  in reverse order.
+- Any additional arguments are passed on the stack. The standard calling convention requires that, when passing arguments on the stack the arguments should be pushed in reverse order.
 - For floating-point arguments, the registers `xmm0` to `xmm7` are used in that order for the first eight float arguments.
 - When function is completed, the calling routine is responsible for clearing the arguments from the stack. Stack point `rsp` is adjusted as necessary to clear the arguments off the stack. Since each argument is 8 bytes the adjustment would be adding [(number of arguments) * 8] to the `rsp`.
 - For value returning functions, the result is placed in A register (`xmm0` for floating-points) based on the size of the value being returned.
 ### Register usage
+The standard calling convention specifies the usage of registers when making function calls. Specifically some registers are expected to be preserved across a function call. If a value is placed in a preserved/saved register, and the function must use that register, the original value must be preserved by placing it on the stack, altered as needed, and then restored to its original value before returning to the calling routine. 
+| Register | Usage |
+| ---------- | ---------- |
+| rax | Return value |
+| rbx | Callee saved |
+| rcx | 4th argument |
+| rdx | 3rd argument |
+| rsi | 2nd argument |
+| rdi | 1st argument |
+| rbp | Callee saved |
+| rsp | Stack pointer |
+| r8 | 5th argument |
+| r9 | 6th argument |
+| r10 | Temporary |
+| r11 | Temporary |
+| r12 | Callee saved |
+| r13 | Callee saved |
+| r14 | Callee saved | 
+| r15 | Callee saved |
+
+- Temporary registers (`rax`, `r8`, `r9`) : not preserved across a function call.
+- Argument registers (`rdi`, `rsi`, `rdx`, `rcx`, `r8`, `r9`) : not preserved across a function call.
+- This means that any of these register may be used in the function without the need to preserve the original value.
+- None of the floating-point registers are preserved across a function call.
+### Call Frame
+- Items on the stack as part of a function call are referred to as a call frame (or activation record or stack frame).
+- Based on the standard calling convention, the items on the stack, if any, will be in a specific general format.
+- Possible items of a call frame : return address (required), preserved registers (if any), passed arguments (if any), stack dynamic local variables (if any)
+- For some functions, a full call frame may not e required : leaf function (doesn't call antoher function), passes its arguments only in registers (doesn't use the stack), doesn't alter any of the saved registers, doesn't require stack-based local variables
+- Standard calling convention doesn't explicitly require use of the frame pointer register `rsp`. Compilers are allowed to optimize the call frame and not use `rsp`.
+- If there are any stack-based arguments or any local variables needed within a function, `rpb` should be pushed and then set pointing to itself. As additional pushes and pops are performed (thus changing `rsp`), `rbp` will remain unchanged. This allows `rbp` to be used as reference to access arguments passed on the stack (if any) or stack dynamic local variables (if any).
+- In the Linux standard convention, the first 128-bytes after `rsp` are reserved : red zone. This red zone may be used by the function without any adjustement to the stack pointer.
+## System Services
+There are many operations taht an application program must use the operating system to perform. System call is the interface between an executing process and the operating system.
+### Calling system services
+- Logically similar to calling a function that may require privileges to operate which is why control is transferred to the operating system.
+- Arguments are placed in the standard argument registers.
+- Determine which system service is desired with a specific call code placed in `rax` : [Linux system call table for x86_64](https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/)
+| Register | Usage |
+| ---------- | ----------|
+| rax | Call code |
+| rdi | 1st argument (if needed) |
+| rsi | 2nd argument (if needed) |
+| rdx | 3rd argument (if needed) |
+| r10 | 4th argument (if needed) |
+| r8 | 5th argument (if needed) |
+| r9 | 6th argument (if needed) |
