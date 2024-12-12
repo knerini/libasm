@@ -16,6 +16,12 @@ The bonus part lets dive more in the Assembly langage with linked-list manipulta
 - ft_list_remove_if
 - ft_atoi_base
 
+## Make
+- `make` : create the library if not already created, compile the **main.c** file (wrote in C language to test the mandatory functions wrote in Assembly language) with the library and create the executable *libasm*
+- `make asm` : create the library if not already created, compile the **main.s** file (wrote in Assembly language to test the mandatory functions wrote in Assembly language) with the library and create the executable *libasm_asm*
+- `make bonus` : create the library if not already created, compile the **main_bonus.c** file (wrote in C language to test the bonus functions wrote in Assembly language) with the library and create the executable *libasm_bonus*
+- `make debug`, `make asm_debug`, `make dbg_bonus` : same as previous rules for each different main file including the debugging flags to use GDB 
+
 ## NASM
 It's an assembler for the x86 CPU Architecture : [NASM](https://www.nasm.us/).
 `nasm -f elf64 <filename>` to compile with the x86_64 format on Linux.
@@ -33,6 +39,13 @@ Without a debugger it's not possible to identify bugs and resolve them : [GDB](h
 | `print $<register>` | Display the value of the register, e.g., `print $rax`. | 
 | `print/<format> $<register>` | Display the value of the register in different formats : `print` (decimal), `print/x` (hexadecimal), `print/u` (unsigned decimal). E.g., `print/x $rax`. |
 | `x/<format> $<register>` | Examine the memory at specified register. `x/c` (character), `x/s` (string), `x/x` (hexadecimal), `x/i` (Assembly instruction), `x/d` (decimal). E.g., `x/s $rax`. |
+
+## Ressources Used
+- [x86-64 Assembly Language Programming with Ubuntu](http://www.egr.unlv.edu/~ed/x86.html) by Ed Jorgensen, Version 1.1.58 (september 2024)
+- [Assembly Programming Tutorial](https://www.tutorialspoint.com/assembly_programming/index.htm) Tutorials Point
+- [Le language assembleur intel 64 bits](https://www.lacl.fr/tan/asm) by Sovanna Tan (November 2013)
+- [Linkedlists in assembly](https://www.reddit.com/r/learnprogramming/comments/133xt76/linked_lists_in_assembly/?rdt=46815) Reddit
+- [libasm: a guide to get famliar with Assembly in 42](https://medium.com/@leogaudin/libasm-a-guide-to-get-familiar-with-assembly-in-42-830f619f4c5e) Medium
 
 # ASSEMBLY
 ## Data storage size
@@ -393,7 +406,7 @@ There are many operations taht an application program must use the operating sys
 > mov rax, SYS_write    ; Prepare write syscall
 > syscall
 > ```
-## Multiple Souce Files
+## Multiple Source Files
 - If a function is called from a source file and the function code is not located in the current source file, the assemble will generate an error. Same is applied for variables accessed that are not located in the current file.
 - Use the `extern` statement : `extern <symbol Name>`.
 - It is used to call a hugh-level language function too.
@@ -411,3 +424,7 @@ There are many operations taht an application program must use the operating sys
 > call malloc WRT ..plt      ; process to the C function call
 > ```
 - `WRT ..plt` : With Respect To Procedure Linkage Table. Refers to a specific syntax used when dealing with position-independent code (PIC) and shared libraries in the context of dynamic linking. In NASM, `WRT ..plt` tells the assembler to refer to the PLT entry for the given symbol rather than its actual address or Global Offset Table (GOT) entry.
+## Command Line Arguments
+- Since the operating system will call the main program as a function, the standard calling convention applies.
+- Argument count is passed as parameter in `rdi` and argument vector address as parameter in `rsi`.
+- Argument vector address is an array containing the quadword addresses of the string for each argument. Each string is NULL terminated by the operating system and will not contain a newline character.
