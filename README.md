@@ -187,6 +187,7 @@ Example from my code **ft_strdup.s** :
 | `rol <dest>, <imm>` / `rol <dest>, cl` | Perform rotate left operation on `dest`. `imm` or the value in `cl` register must be between 1 and 64. `dest` cannot be an immediate. |
 | `ror <dest>, <imm>` / `ror <dest>, cl` | Perform rotate right operation on `dest`. `imm` or the value in `cl` register must be between 1 and 64. `dest` cannot be an immediate. |
 | `cmp <op1>, <op2>` | Compare `op1` with `op2`. Results are stored in flag registers. Operands are not changed. Both operands cannot be memory. `op1` cannot be an immediate. |
+| `test <dest>, <src>`| Perform a bitwise AND operation between `dest`and `src` but doesn't store the result. Instead, it updates the flags registers based on the result of the operation. |
 | `je <label>` | Based on preceding comparison instruction, jump to `label` if `op1` == `op2`. Label must be defined exactly once. |
 | `jne <label>` | Based on preceding comparison instruction, jump to `label` if `op1` != `op2`. Label must be defined exactly once. |
 | `jl <label>` | For signed data, based on preceding comparison instruction, jump to `label` if `op1` < `op2`. Label must be defined exactly once. |
