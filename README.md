@@ -1,4 +1,5 @@
 # THE PROJECT : LIBASM
+Subject version : 5
 ## Guidelines
 This 42's School Project aims to start being familiar with Assembly langage x86_64 ASM architecture using the Intel syntax. The compilation is done with NASM.
 The purpose of this project is to do a library by recoding few common C functions like :
